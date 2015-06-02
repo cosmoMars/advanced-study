@@ -30,6 +30,12 @@ public class LanArticleController extends AbstractBaseController<LanArticle, Lon
     }
 
 
+    /**
+     * 获取文章列表
+     * @param tags
+     * @param pageable
+     * @return
+     */
     @RequestMapping("retrieveArticle")
     public
     @ResponseBody
@@ -63,6 +69,11 @@ public class LanArticleController extends AbstractBaseController<LanArticle, Lon
     }
 
 
+    /**
+     * 获取文章详情
+     * @param id
+     * @return
+     */
     @RequestMapping("retrieveArticleDetial/{id}")
     public
     @ResponseBody

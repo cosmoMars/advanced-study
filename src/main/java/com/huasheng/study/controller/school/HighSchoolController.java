@@ -2,12 +2,12 @@ package com.huasheng.study.controller.school;
 
 import com.huasheng.MyRepository;
 import com.huasheng.core.controller.AbstractBaseController;
-import com.huasheng.study.entity.school.Gender;
-import com.huasheng.study.entity.school.Grade;
-import com.huasheng.study.entity.school.HighSchool;
+import com.huasheng.study.entity.school.*;
 import com.huasheng.study.repository.base.StateRepository;
 import com.huasheng.study.repository.school.HighSchoolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -33,6 +33,25 @@ public class HighSchoolController extends AbstractBaseController<HighSchool, Lon
         return highSchoolRepository;
     }
 
+    /**
+     * 获取学校列表
+     * @param gender
+     * @param grade
+     * @param languageIdx
+     * @param score
+     * @param ssat
+     * @param stateId
+     * @param apCourse
+     * @param ibCourse
+     * @param religionIdx
+     * @param residentialIdx
+     * @param expenses
+     * @param internationalRatio
+     * @param averageSat
+     * @param schoolPopulation
+     * @param pageable
+     * @return
+     */
     @RequestMapping("retrieveHighSchool")
     public
     @ResponseBody
@@ -49,7 +68,8 @@ public class HighSchoolController extends AbstractBaseController<HighSchool, Lon
                                            @RequestParam(required = false) Integer expenses,
                                            @RequestParam(required = false) Integer internationalRatio,
                                            @RequestParam(required = false) Integer averageSat,
-                                           @RequestParam(required = false) Integer schoolPopulation) {
+                                           @RequestParam(required = false) Integer schoolPopulation,
+                                           Pageable pageable) {
 
         logger.trace("-- 获取高校信息 --");
 
@@ -70,8 +90,12 @@ public class HighSchoolController extends AbstractBaseController<HighSchool, Lon
                 filters.put("maxItep_greaterThanOrEqualTo", score);
                 break;
         }
-//
-//        filters.put("ssatSat_equal", ssat);
+
+        if (ssat) {
+            filters.put("ssatSat_isTrue", null);
+        } else {
+            filters.put("ssatSat_isFalse", null);
+        }
 
         if (stateId != null) {
             filters.put("state.id_equal", stateId);
@@ -83,10 +107,10 @@ public class HighSchoolController extends AbstractBaseController<HighSchool, Lon
             filters.put("IBCourse_greaterThanOrEqualTo", ibCourse);
         }
         if (religionIdx != null) {
-            filters.put("religion_equalTo", religionIdx);
+            filters.put("religion_equal", Religion.values()[religionIdx]);
         }
         if (residentialIdx != null) {
-            filters.put("residential_equalTo", residentialIdx);
+            filters.put("residential_equal", Residential.values()[residentialIdx]);
         }
         if (expenses != null) {
             filters.put("expenses_lessThanOrEqualTo", expenses);
@@ -101,87 +125,72 @@ public class HighSchoolController extends AbstractBaseController<HighSchool, Lon
         if (schoolPopulation != null) {
             filters.put("schoolPopulation_greaterThanOrEqualTo", schoolPopulation);
         }
-        List<HighSchool> highSchools = highSchoolRepository.findAll(filters);
+        Page<HighSchool> hsPage = highSchoolRepository.findAll(filters, pageable);
+        Map<String, Object> res = new HashMap<>();
+        res.put("success", "1");
+        if (hsPage == null) {
+            return res;
+        }
+        List<HighSchool> highSchools = hsPage.getContent();
 
         List<Map<String, Object>> data = new ArrayList<>();
         for (HighSchool hs : highSchools) {
             Map<String, Object> result = new HashMap<>();
-            result.put("schoolId", hs.getId());
+            result.put("id", hs.getId());
             result.put("title", hs.getTitle());
             result.put("titleEn", hs.getTitleEn());
-            result.put("imagePath", hs.getImagePath());
-            result.put("stateName", hs.getState() == null ? "" : hs.getState().getName());
-            result.put("website", hs.getWebsite());
-            result.put("description", hs.getDescription());
-            result.put("apCourse", hs.getAPCourse());
-            result.put("ibCourse", hs.getIBCourse());
-            result.put("religion", hs.getReligion());
-            result.put("residential", hs.getResidential());
-            result.put("gender", hs.getGender());
-            result.put("expenses", hs.getExpenses());
-            result.put("grade", hs.getGrade());
-            result.put("establishDate", hs.getEstablishDate());
-            result.put("acceptToefl", hs.isAcceptToefl());
-
-            result.put("minToefl", hs.getMinToefl());
-            result.put("maxToefl", hs.getMaxToefl());
-            result.put("acceptSlep", hs.isAcceptSlep());
-            result.put("minSlep", hs.getMinSlep());
-            result.put("maxSlep", hs.getMaxSlep());
-            result.put("ssatSat", hs.isSsatSat());
-            result.put("averageSat", hs.getAverageSat());
-            result.put("internationalStudentRatio", hs.getInternationalStudentRatio());
-            result.put("speciality", hs.getSpeciality());
-            result.put("schoolPopulation", hs.getSchoolPopulation());
-            result.put("clicks", hs.getClicks());
 
             data.add(result);
         }
 
 
-        Map<String, Object> res = new HashMap<>();
-        res.put("success", "1");
         res.put("data", data);
 
         return res;
     }
 
+    /**
+     * 获取学校详情
+     * @param id
+     * @return
+     */
     @RequestMapping("retrieveHighSchoolDetial/{id}")
     public
     @ResponseBody
     Map<String, Object> retrieveHighSchoolDetial(@PathVariable long id) {
 
-        HighSchool highSchool = highSchoolRepository.findOne(id);
+        HighSchool hs = highSchoolRepository.findOne(id);
 
         Map<String, Object> result = new HashMap<>();
-        result.put("id", highSchool.getId());
-        result.put("title", highSchool.getTitle());
-        result.put("titleEn", highSchool.getTitleEn());
-        result.put("imagePath", highSchool.getImagePath());
-        result.put("stateName", highSchool.getState() == null ? "" : highSchool.getState().getName());
-        result.put("website", highSchool.getWebsite());
-        result.put("description", highSchool.getDescription());
-        result.put("apCourse", highSchool.getAPCourse());
-        result.put("ibCourse", highSchool.getIBCourse());
-        result.put("religion", highSchool.getReligion().toString());
-        result.put("residential", highSchool.getResidential().toString());
-        result.put("gender", highSchool.getGender().toString());
-        result.put("expenses", highSchool.getExpenses());
-        result.put("grade", highSchool.getGrade().toString());
-        result.put("establishDate", highSchool.getEstablishDate());
-        result.put("acceptToefl", highSchool.isAcceptToefl());
+        result.put("id", hs.getId());
+        result.put("title", hs.getTitle());
+        result.put("titleEn", hs.getTitleEn());
+        result.put("imagePath", hs.getImagePath());
+        result.put("stateName", hs.getState() == null ? "" : hs.getState().getName());
+        result.put("website", hs.getWebsite());
+        result.put("description", hs.getDescription());
+        result.put("apCourse", hs.getAPCourse());
+        result.put("ibCourse", hs.getIBCourse());
+        result.put("religion", hs.getReligion().toString());
+        result.put("residential", hs.getResidential().toString());
+        result.put("gender", hs.getGender().toString());
+        result.put("expenses", hs.getExpenses());
+        result.put("grade", hs.getGrade().toString());
+        result.put("establishDate", hs.getEstablishDate());
+        result.put("acceptToefl", hs.isAcceptToefl());
 
-        result.put("minToefl", highSchool.getMinToefl());
-        result.put("maxToefl", highSchool.getMaxToefl());
-        result.put("acceptSlep", highSchool.isAcceptSlep());
-        result.put("minSlep", highSchool.getMinSlep());
-        result.put("maxSlep", highSchool.getMaxSlep());
-        result.put("ssatSat", highSchool.isSsatSat());
-        result.put("averageSat", highSchool.getAverageSat());
-        result.put("internationalStudentRatio", highSchool.getInternationalStudentRatio());
-        result.put("speciality", highSchool.getSpeciality());
-        result.put("schoolPopulation", highSchool.getSchoolPopulation());
-        result.put("clicks", highSchool.getClicks());
+        result.put("minToefl", hs.getMinToefl());
+        result.put("maxToefl", hs.getMaxToefl());
+        result.put("acceptSlep", hs.isAcceptSlep());
+        result.put("minSlep", hs.getMinSlep());
+        result.put("maxSlep", hs.getMaxSlep());
+        result.put("ssatSat", hs.isSsatSat());
+        result.put("averageSat", hs.getAverageSat());
+        result.put("internationalStudentRatio", hs.getInternationalStudentRatio());
+        result.put("speciality", hs.getSpeciality());
+        result.put("schoolPopulation", hs.getSchoolPopulation());
+        result.put("clicks", hs.getClicks());
+        result.put("agencyReviews", hs.getAgencyReviews());
         return result;
 
     }

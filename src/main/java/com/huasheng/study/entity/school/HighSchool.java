@@ -153,6 +153,8 @@ public class HighSchool extends AbstractPersistable<Long> {
      */
     private int clicks;
 
+    private String agencyReviews;
+
     public String getTitle() {
         return title;
     }
@@ -383,5 +385,13 @@ public class HighSchool extends AbstractPersistable<Long> {
 
     public void setClicks(int clicks) {
         this.clicks = clicks;
+    }
+
+    public String getAgencyReviews() {
+        return agencyReviews;
+    }
+
+    public void setAgencyReviews(String agencyReviews) {
+        this.agencyReviews = agencyReviews;
     }
 }
