@@ -11,8 +11,8 @@ import java.util.Date;
 /**
  * Created by mars on 15/5/4.
  */
-@Entity
-@Table(name = "lan_assess")
+//@Entity
+//@Table(name = "lan_assess")
 public class Assess extends AbstractPersistable<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -8,8 +8,8 @@ import java.util.Date;
 /**
  * Created by mars on 15/5/4.
  */
-@Entity
-@Table(name = "sys_user")
+//@Entity
+//@Table(name = "sys_user")
 public class User extends AbstractPersistable<Long> {
 
     /**

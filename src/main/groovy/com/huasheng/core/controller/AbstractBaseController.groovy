@@ -1,3 +1,5 @@
+package com.huasheng.core.controller
+
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.huasheng.MyRepository
 import org.slf4j.Logger

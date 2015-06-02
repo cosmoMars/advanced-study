@@ -1,16 +1,13 @@
 package com.huasheng.study.entity.user;
 
-import com.huasheng.core.entity.AbstractBaseEntity;
-
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import org.springframework.data.jpa.domain.AbstractPersistable;
 
 /**
  * Created by mars on 15/5/4.
  */
-@Entity
-@Table(name = "sys_role")
-public class Role extends AbstractBaseEntity<Long> {
+//@Entity
+//@Table(name = "sys_role")
+public class Role extends AbstractPersistable<Long> {
 
     private String name;
 

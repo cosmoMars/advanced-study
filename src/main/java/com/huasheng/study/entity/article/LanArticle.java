@@ -1,125 +1,75 @@
 package com.huasheng.study.entity.article;
 
-import com.huasheng.study.entity.user.Role;
-import com.huasheng.study.entity.user.Tag;
-import com.huasheng.study.entity.user.User;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Created by mars on 15/5/4.
- * 文章
+ * Created by mars on 15/6/2.
  */
-//@Entity
-//@Table(name = "lan_article")
-public class Article extends AbstractPersistable<Long> {
+@Entity
+@Table(name = "articles")
+public class LanArticle extends AbstractPersistable<Long> {
 
-    /**
-     * 关键字
-     */
-    private String keyWords;
+    private String articleId;
 
-    /**
-     * 描述
-     */
+    private String keywords;
+
     private String description;
 
-    /**
-     * 标题
-     */
     private String title;
 
-    /**
-     * 图片路径
-     */
     private String imagePath;
 
-    /**
-     * 总结
-     */
     private String summary;
 
-    /**
-     * 详情
-     */
     @Column(columnDefinition = "LONGTEXT")
     private String details;
 
-    /**
-     * url
-     */
     private String url;
 
-    /**
-     * 是否链接
-     */
     private boolean isLink;
-
-    /**
-     * 自动连接
-     */
-    private boolean autoLock;
-
-    /**
-     * 自动删除
-     */
-    private boolean autoDelete;
-
-    /**
-     * 点击量
-     */
-    private int clicks;
-
-    /**
-     *
-     */
-    private int tClicks;
-
-    /**
-     *
-     */
-    private int support;
-
-    /**
-     *
-     */
-    private int oppose;
-
-    /**
-     * 用户
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
-
-    /**
-     * 来源
-     */
-    private String source;
-
-    /**
-     * 角色
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Role role;
-
-    /**
-     * 标签
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Tag tag;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
 
+    private boolean autoLock;
 
-    public String getKeyWords() {
-        return keyWords;
+    private boolean autoDelete;
+
+    private int clicks;
+
+    private int tClicks;
+
+    private int support;
+
+    private int oppose;
+
+    private String userId;
+
+    private String userName;
+
+    private String source;
+
+    private String author;
+
+    private String tags;
+
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setKeyWords(String keyWords) {
-        this.keyWords = keyWords;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 
     public String getDescription() {
@@ -178,6 +128,14 @@ public class Article extends AbstractPersistable<Long> {
         this.isLink = isLink;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     public boolean isAutoLock() {
         return autoLock;
     }
@@ -226,12 +184,20 @@ public class Article extends AbstractPersistable<Long> {
         this.oppose = oppose;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getSource() {
@@ -242,27 +208,19 @@ public class Article extends AbstractPersistable<Long> {
         this.source = source;
     }
 
-    public Role getRole() {
-        return role;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public Tag getTag() {
-        return tag;
+    public String getTags() {
+        return tags;
     }
 
-    public void setTag(Tag tag) {
-        this.tag = tag;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }

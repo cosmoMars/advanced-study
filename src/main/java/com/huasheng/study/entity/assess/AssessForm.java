@@ -10,8 +10,8 @@ import java.util.Date;
 /**
  * Created by mars on 15/5/4.
  */
-@Entity
-@Table(name = "lan_access_form")
+//@Entity
+//@Table(name = "lan_access_form")
 public class AssessForm extends AbstractPersistable<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
